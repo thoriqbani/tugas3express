@@ -5,11 +5,12 @@ const connection = require('../config/database')
 const {body, validationResult} = require('express-validator')
 
 router.get('/', function(req,res){
-    connection.query('select * from detail_kk order by id_detail desc', function(err, rows){
+    connection.query('SELECT id_detail, dk.no_kk, ktp_saya.nama_lengkap AS saya, status_hubungan_dalam_keluarga, ktp_ayah.nama_lengkap AS ayah, ktp_ibu.nama_lengkap AS ibu FROM detail_kk AS dk JOIN ktp AS ktp_ayah ON dk.ayah = ktp_ayah.nik JOIN ktp AS ktp_ibu ON dk.ibu = ktp_ibu.nik JOIN ktp AS ktp_saya ON dk.NIK = ktp_saya.nik JOIN kartu_keluarga AS KK ON dk.no_kk = KK.no_kk', function(err, rows){
         if(err){
             return res.status(500).json({
                 status: false,
-                message: 'server failed'
+                message: 'server failed',
+                error: err,
             })
         } else {
             return res.status(200).json({
@@ -60,17 +61,19 @@ router.post('/store', [
 
 router.get('/(:id_detail)', function(req,res) {
     let id_detail= req.params.id_detail
-    connection.query(`select * from detail_kk where id_detail = ${id_detail}`, function(err,rows){
+    connection.query(`SELECT id_detail, dk.no_kk, ktp_saya.nama_lengkap AS saya, status_hubungan_dalam_keluarga, ktp_ayah.nama_lengkap AS ayah, ktp_ibu.nama_lengkap AS ibu FROM detail_kk AS dk JOIN ktp AS ktp_ayah ON dk.ayah = ktp_ayah.nik JOIN ktp AS ktp_ibu ON dk.ibu = ktp_ibu.nik JOIN ktp AS ktp_saya ON dk.NIK = ktp_saya.nik JOIN kartu_keluarga AS KK ON dk.no_kk = KK.no_kk where id_detail = ${id_detail}`, function(err,rows){
         if(err){
             return res.status(500).json({
                 status: false,
-                message: 'server error'
+                message: 'server error',
+                error: err,
             })
         }
         if(rows.length <=0){
             return res.status(404).json({
                 status: false,
-                message: 'Not Found'
+                message: 'Not Found',
+                error: err
             })
         } else {
             return res.status(200).json({

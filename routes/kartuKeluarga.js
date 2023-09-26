@@ -21,7 +21,7 @@ router.get('/', function(req,res){
     })
 })
 
-router.post('/store', [
+router.post('/store', [ 
     body('no_kk').notEmpty(),
     body('alamat').notEmpty(),
     body('rt').notEmpty(),
@@ -59,7 +59,7 @@ router.post('/store', [
         } else {
             return res.status(201).json({
                 status: true,
-                message:'KTP Create',
+                message:'KK Create',
                 data: rows[0]
             })
         }

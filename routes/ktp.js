@@ -134,7 +134,6 @@ router.patch('/update/:nik', [
             return res.status(200).json({
                 status: true,
                 message: 'update',
-                // data: rows[0]
             })
         }
     })

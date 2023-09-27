@@ -12,6 +12,9 @@ app.use(bodyParser.urlencoded({ extended:false }))
 const mhsRouter = require('./routes/mahasiswa')
 app.use('/api/mhs', mhsRouter)
 
+const jurusanRouter = require('./routes/jurusan')
+app.use('/api/jurusan', jurusanRouter)
+
 const ktp = require('./routes/ktp')
 app.use('/api/ktp', ktp)
 

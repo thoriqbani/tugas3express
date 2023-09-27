@@ -5,7 +5,7 @@ const connection = require('../config/database')
 const {body, validationResult} = require('express-validator')
 
 router.get('/', function(req,res){
-    connection.query(' SELECT mahasiswa.nama, jurusan.nama_jurusan '+' from mahasiswa join jurusan '+' ON mahasiswa.id_jurusan=jurusan.id_j order by mahasiswa.id_m desc', function(err, rows){
+    connection.query('SELECT * FROM jurusan order by id_j desc', function(err, rows){
         if(err){
             return res.status(500).json({
                 status: false,
@@ -23,9 +23,7 @@ router.get('/', function(req,res){
 })
 
 router.post('/store', [
-    body('nama').notEmpty(),
-    body('nrp').notEmpty(),
-    body('id_jurusan').notEmpty(),
+    body('nama_jurusan').notEmpty(),
 ], (req, res) => {
     const error = validationResult(req)
     if(!error.isEmpty()){
@@ -34,11 +32,9 @@ router.post('/store', [
         })
     }
     let Data = {
-        nama: req.body.nama,
-        nrp:req.body.nrp,
-        id_jurusan:req.body.id_jurusan,
+        nama_jurusan: req.body.nama_jurusan,
     }
-    connection.query('insert into mahasiswa set ? ', Data, function(err, rows){
+    connection.query('insert into jurusan set ? ', Data, function(err, rows){
         if(err){
             return res.status(500).json({
                 status: false,
@@ -56,7 +52,7 @@ router.post('/store', [
 
 router.get('/(:id)', function(req,res) {
     let id= req.params.id
-    connection.query(`select * from mahasiswa where id_m = ${id}`, function(err,rows){
+    connection.query(`select * from jurusan where id_j = ${id}`, function(err,rows){
         if(err){
             return res.status(500).json({
                 status: false,
@@ -79,9 +75,7 @@ router.get('/(:id)', function(req,res) {
 })
 
 router.patch('/update/:id',[
-    body('nama').notEmpty(),
-    body('nrp').notEmpty(),
-    body('id_jurusan').notEmpty(),
+    body('nama_jurusan').notEmpty(),
 ], (req,res) => {
     const error = validationResult(req)
     if(!error.isEmpty()){
@@ -91,11 +85,9 @@ router.patch('/update/:id',[
     }
     let id = req.params.id
     let data = {
-        nama:req.body.nama,
-        nrp:req.body.nrp,
-        id_jurusan:req.body.id_jurusan,
+        nama_jurusan: req.body.nama_jurusan,
     }
-    connection.query(`update mahasiswa set ? where id_m = ${id}`, data, function(err,rows){
+    connection.query(`update jurusan set ? where id_j = ${id}`, data, function(err,rows){
         if(err){
             return res.status(500).json({
                 status: false,
@@ -112,7 +104,7 @@ router.patch('/update/:id',[
 
 router.delete('/delete/(:id)', function(req, res){
     let id = req.params.id
-    connection.query(`delete from mahasiswa where id_m = ${id}`, function(err, rows){
+    connection.query(`delete from jurusan where id_j = ${id}`, function(err, rows){
         if(err){
             return res.status(500).json({
                 status: false,

@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 router.get('/', function(req,res){
-    connection.query(' SELECT mahasiswa.nama, jurusan.nama_jurusan '+' from mahasiswa join jurusan '+' ON mahasiswa.id_jurusan=jurusan.id_j order by mahasiswa.id_m desc', function(err, rows){
+    connection.query(' SELECT mahasiswa.nama, jurusan.nama_jurusan, mahasiswa.gambar, mahasiswa.swa_foto '+' from mahasiswa join jurusan '+' ON mahasiswa.id_jurusan=jurusan.id_j order by mahasiswa.id_m desc', function(err, rows){
         if(err){
             return res.status(500).json({
                 status: false,

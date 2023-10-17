@@ -2,12 +2,12 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+
 const cors = require('cors')
 app.use(cors())
 
-app.get('/',(req,res)=>{
-    res.send('halodek')
-})
+const path = require('path')
+app.use('/static', express.static(path.join(__dirname, 'public/images')))
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended:false }))

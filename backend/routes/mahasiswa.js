@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 router.get('/', function(req,res){
-    connection.query(' SELECT mahasiswa.nama, jurusan.nama_jurusan, mahasiswa.gambar, mahasiswa.swa_foto '+' from mahasiswa join jurusan '+' ON mahasiswa.id_jurusan=jurusan.id_j order by mahasiswa.id_m desc', function(err, rows){
+    connection.query('SELECT mahasiswa.id_m, mahasiswa.nrp, mahasiswa.nama, jurusan.nama_jurusan, mahasiswa.gambar, mahasiswa.swa_foto '+' from mahasiswa join jurusan '+' ON mahasiswa.id_jurusan=jurusan.id_j order by mahasiswa.id_m desc', function(err, rows){
         if(err){
             return res.status(500).json({
                 status: false,
@@ -150,8 +150,12 @@ router.patch('/update/:id',upload.fields([
             nama:req.body.nama,
             nrp:req.body.nrp,
             id_jurusan:req.body.id_jurusan,
-            gambar: gambar,
-            swa_foto: swa_foto,
+        }
+        if(gambar){
+            data.gambar = gambar;
+        }
+        if(swa_foto){
+            data.swa_foto = swa_foto;
         }
 
         connection.query(`update mahasiswa set ? where id_m = ${id}`, data, function(err,rows){

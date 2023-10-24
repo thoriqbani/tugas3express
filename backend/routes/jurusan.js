@@ -22,9 +22,11 @@ router.get('/', function(req,res){
     })
 })
 
-router.post('/store', [
-    body('nama_jurusan').notEmpty(),
-], (req, res) => {
+router.post('/store'
+    // [
+    //     body("nama_jurusan").notEmpty()
+    // ]
+        , (req, res) => {
     const error = validationResult(req)
     if(!error.isEmpty()){
         return res.status(422).json({

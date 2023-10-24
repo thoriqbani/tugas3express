@@ -41,12 +41,7 @@ router.post('/store',
     upload.fields([
         {name: 'gambar', maxCount: 1},
         {name: 'swa_foto', maxCount: 1},
-    ]),
-    [
-    body('nama').notEmpty(),
-    body('nrp').notEmpty(),
-    body('id_jurusan').notEmpty(),
-    ], (req, res) => {
+    ]), (req, res) => {
     const error = validationResult(req)
         if(!error.isEmpty()){
         return res.status(422).json({

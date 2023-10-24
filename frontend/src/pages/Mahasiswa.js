@@ -75,7 +75,7 @@ function Mahasiswa() {
     formData.append("swa_foto", swa_foto);
 
     try {
-      await axios.post("http://localhost:3000/api/mhs/store/", formData, {
+      await axios.post("http://localhost:3000/api/mhs/store", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -140,7 +140,16 @@ function Mahasiswa() {
     setValidation(error.response.data);
     }
   }
-
+  const handleDelete = (id_m) => {
+    axios.delete(`http://localhost:3000/api/mhs/delete/${id_m}`).then((response) => {
+      console.log('data berhasil dihapus')
+      const updatedMhs = mhs.filter((item) => item.id_m !== id_m)
+      setMhs(updatedMhs)
+    }).catch((error) => {
+      console.error('gagal menghapus data ', error);
+      alert('Gagal Menghapus data');
+    })
+  }
   return (
     <Container>
       <Row>
@@ -158,6 +167,7 @@ function Mahasiswa() {
               <th scope="col">Jurusan</th>
               <th scope="col">gambar</th>
               <th scope="col">swa_foto</th>
+              <th scope="col">ACTION </th>
             </tr>
           </thead>
 
@@ -173,7 +183,10 @@ function Mahasiswa() {
                 <td>
                   <img src={url + mh.swa_foto} height="100" />
                 </td>
-                <td><button onClick={() => handleShowEditModal(mh)} className="btn btn-sm btn-info">EDIT</button></td>
+                <td>
+                  <button onClick={() => handleShowEditModal(mh)} className="btn btn-sm btn-info">EDIT</button>
+                  <button onClick={() => handleDelete(mh.id_m)} className='btn btn-sm btn-danger' >Hapus</button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -216,14 +229,14 @@ function Mahasiswa() {
                 onChange={handleIdJurusanChange}
               >
                 {jrs.map((jr) => (
-                  <option key={jr.id_jurusan} value={jr.id_jurusan}>
+                  <option key={jr.id_j} value={jr.id_j}>
                     {jr.nama_jurusan}
                   </option>
                 ))}
               </select>
             </div>
             <div className="mb-3">
-              <label className="form-label">Gambar :</label>
+              <label className="form-label">Gambar:</label>
               <input
                 type="file"
                 className="form-control"

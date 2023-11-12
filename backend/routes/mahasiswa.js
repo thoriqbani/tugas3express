@@ -19,8 +19,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage: storage})
 
-router.get('/', function(req,res){
-    connection.query('SELECT mahasiswa.id_m, mahasiswa.nrp, mahasiswa.nama, jurusan.nama_jurusan, mahasiswa.gambar, mahasiswa.swa_foto '+' from mahasiswa join jurusan '+' ON mahasiswa.id_jurusan=jurusan.id_j order by mahasiswa.id_m desc', function(err, rows){
+// const authenticateToken = require('./auth/middleware/authenticateToken');
+const authenticateToken = require('../routes/auth/middleware/authenticateToken');
+
+router.get('/', authenticateToken,function(req,res){
+    connection.query('SELECT mahasiswa.id_m, mahasiswa.nrp, mahasiswa.nama, jurusan.nama_jurusan, mahasiswa.gambar, mahasiswa.swa_foto from mahasiswa join jurusan ON mahasiswa.id_jurusan=jurusan.id_j order by mahasiswa.id_m desc', function(err, rows){
         if(err){
             return res.status(500).json({
                 status: false,
@@ -37,7 +40,7 @@ router.get('/', function(req,res){
     })
 })
 
-router.post('/store',
+router.post('/store', authenticateToken,
     upload.fields([
         {name: 'gambar', maxCount: 1},
         {name: 'swa_foto', maxCount: 1},
@@ -72,7 +75,7 @@ router.post('/store',
     })
 })
 
-router.get('/(:id)', function(req,res) {
+router.get('/(:id)', authenticateToken, function(req,res) {
     let id= req.params.id
     connection.query(`select * from mahasiswa where id_m = ${id}`, function(err,rows){
         if(err){
@@ -96,7 +99,7 @@ router.get('/(:id)', function(req,res) {
     })
 })
 
-router.patch('/update/:id',upload.fields([
+router.patch('/update/:id', authenticateToken,upload.fields([
         {name: 'gambar', maxCount: 1},
         {name: 'swa_foto', maxCount: 1},
     ]), 
@@ -169,7 +172,7 @@ router.patch('/update/:id',upload.fields([
     })
 })
 
-router.delete('/delete/(:id)', function(req, res){
+router.delete('/delete/(:id)', authenticateToken, function(req, res){
     let id = req.params.id
     connection.query(`select * from mahasiswa where id_m = ${id}`, function(err,rows){
         if(err){

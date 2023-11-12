@@ -3,6 +3,7 @@ import { Container, Row, Col, Table, Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+const token = localStorage.getItem('token');
 
 function Mahasiswa() {
   const [mhs, setMhs] = useState([]);
@@ -23,11 +24,14 @@ function Mahasiswa() {
 
   const fectData = async () => {
     try {
-      const response1 = await axios.get("http://localhost:3000/api/mhs");
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+      const response1 = await axios.get("http://localhost:3000/api/mhs",{headers});
       const data1 = await response1.data.data;
       setMhs(data1);
 
-      const response2 = await axios.get("http://localhost:3000/api/jurusan");
+      const response2 = await axios.get("http://localhost:3000/api/jurusan",{headers});
       const data2 = await response2.data.data;
       setJrsn(data2);
     } catch (error) {
@@ -78,6 +82,7 @@ function Mahasiswa() {
       await axios.post("http://localhost:3000/api/mhs/store", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
       navigate("/mhs");
@@ -130,6 +135,7 @@ function Mahasiswa() {
       await axios.patch(`http://localhost:3000/api/mhs/update/${editData.id_m}`, formData, {
       headers: {
         'Content-Type' : 'multipart/form-data',
+        'Authorization': `Bearer ${token}`,
       },
     });
     navigate('/mhs');
@@ -141,7 +147,12 @@ function Mahasiswa() {
     }
   }
   const handleDelete = (id_m) => {
-    axios.delete(`http://localhost:3000/api/mhs/delete/${id_m}`).then((response) => {
+    axios.delete(`http://localhost:3000/api/mhs/delete/${id_m}`,{
+      headers:{
+        Authorization:`Bearer ${token}`,
+      }
+    })
+    .then((response) => {
       console.log('data berhasil dihapus')
       const updatedMhs = mhs.filter((item) => item.id_m !== id_m)
       setMhs(updatedMhs)
@@ -174,14 +185,14 @@ function Mahasiswa() {
           <tbody>
             {mhs.map((mh, index) => (
               <tr>
-                <td>{index + 1}</td>
-                <td>{mh.nama}</td>
-                <td>{mh.nama_jurusan}</td>
+                <td>{ index + 1 }</td>
+                <td>{ mh.nama }</td>
+                <td>{ mh.nama_jurusan }</td>
                 <td>
-                  <img src={url + mh.gambar} height="100" />
+                  <img src={ url + mh.gambar } height="100" />
                 </td>
                 <td>
-                  <img src={url + mh.swa_foto} height="100" />
+                  <img src={ url + mh.swa_foto } height="100" />
                 </td>
                 <td>
                   <button onClick={() => handleShowEditModal(mh)} className="btn btn-sm btn-info">EDIT</button>
@@ -230,7 +241,7 @@ function Mahasiswa() {
               >
                 {jrs.map((jr) => (
                   <option key={jr.id_j} value={jr.id_j}>
-                    {jr.nama_jurusan}
+                    { jr.nama_jurusan }
                   </option>
                 ))}
               </select>

@@ -23,7 +23,7 @@ router.get('/', function(req,res){
 })
 
 router.post('/store'
-    // [
+    // ,[
     //     body("nama_jurusan").notEmpty()
     // ]
         , (req, res) => {
@@ -69,7 +69,7 @@ router.get('/(:id)', function(req,res) {
         } else {
             return res.status(200).json({
                 status: true,
-                message:'data mahasiswa',
+                message:'data jurusan',
                 data: rows[0]
             })
         }
